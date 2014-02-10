@@ -1,15 +1,17 @@
-.. rocon_app_utilities documentation master file, created by
-   sphinx-quickstart on Mon Feb 10 12:53:09 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to rocon_app_utilities's documentation!
+ROCON App Utilities
 ===============================================
+
+`rocon_app_utilities` provides python modules to manipulate ROCON app related stuffs.
+
+.. _`rocon_app_utilities`: http://www.github.com/robotics-in-concert/rocon_app_platform/rocon_app_utilities
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
+
+   README
+   CHAGELOG
 
 
 
@@ -18,5 +20,3 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
-
