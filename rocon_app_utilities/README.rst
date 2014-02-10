@@ -10,3 +10,4 @@ Commands
 * rapp info <package_name>/<rapp> - return a full specification of rapp. 
 * rapp depends <package_name>/<rapp> - return a list of all of rapp's dependencies
 * rapp depends-on <package_name>/<rapp> - return a list of rapps that depend on the given package
+* rapp profile - a full crawl of package directory and update rapp index 
