@@ -5,6 +5,6 @@
 #
 ##############################################################################
 
-import rocon_app_utilities.rapp
+import rocon_app_utilities.rapp_cmd
 
-rocon_app_utilities.rapp.main()
+rocon_app_utilities.rapp_cmd.main()
