@@ -9,8 +9,12 @@ from __future__ import division, print_function
 
 import sys
 import os
+import traceback
 import argparse
+
+
 import rocon_utilities
+import rapp_profiler 
 
 #################################################################################
 # Global variables
@@ -27,8 +31,23 @@ NAME='rapp'
 #################################################################################
 
 def _rapp_cmd_list(argv):
-    print("Rapp lists")
-    pass
+    """
+      Command-line parsing for 'rapp list' command.
+    """
+
+    # Parse command arguments
+    args = argv[2:]
+    parser = argparse.ArgumentParser(description='Displays list of rapps')
+    list_group = parser.add_mutually_exclusive_group()
+    list_group.add_argument('-b','--black-list', default=[], help='Specify package black list')
+    list_group.add_argument('-w','--white-list', default=[], help='Specify package white list')
+    parsed_args = parser.parse_args(args)
+
+    # Converting [rocon_apps,turtle_concert] comma seperated string into list
+    if parsed_args.white_list:
+        parsed_args.white_list = parsed_args.white_list[1:-1].split(',')
+    if parsed_args.black_list:
+        parsed_args.black_list = parsed_args.black_list[1:-1].split(',')
 
 
 def _rapp_cmd_info(argv):
@@ -46,7 +65,7 @@ def _rapp_cmd_depends_on(argv):
     pass
 
 def _rapp_cmd_profile(argv):
-    print("Profile")
+    rapp_profiler.update_cache()
     pass
 
 def _rapp_cmd_compat(argv):
@@ -100,4 +119,7 @@ def main():
             _fullusage()
     except Exception as e:
         sys.stderr.write("Error: %s\n"%str(e))
+        ex, val, tb = sys.exc_info()
+        traceback.print_exception(ex, val, tb)
+
         sys.exit(1)
