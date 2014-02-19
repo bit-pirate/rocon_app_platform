@@ -38,42 +38,27 @@ def update_cache():
 
     # Load rapp from file. After this rapp dictionary should contain only valid rapps 
     # invalid_rapps will be resolved with parent specification
-
     rapp, invalid_rapp = _load_specs_from_file(rapp_path, Rapp)
     meta_rapp, invalid_meta_rapp = _load_specs_from_file(metarapp_path, MetaRapp)
 
-    # TODO: We might want to create rapp parent tree to optimize rapp resolution
+    parent_index = _create_parent_index(rapp, meta_rapp, invalid_rapp)
+    rapp_index = dict(rapp, **meta_rapp)
 
     # Lets resolve invalid rapps with parent specification
-    print('Invalid Apps')
-    for name, r in invalid_rapp.items():
-        _, missing = r
-        print(name + ' : ' + str(missing))
+    for name, inval_rapp in invalid_rapp.items():
+        parent_name = parent_index[name]
+        if not parent_name:
+            console.warning('[' + name + '] misses required attribute ' + str(inval_rapp.validate()) + ' and does not have parent specification')
 
-    print('Valid Rapp')
-    for name in rapp:
-        print(name)
-    print('Valid Meta Rapp')
-    for name in meta_rapp:
-        print(name)
+        parent = rapp_index[parent_name]
 
-    print('InValid Meta Rapp')
-    for name, r in invalid_meta_rapp.items():
-        _, missing = r
-        print(name + ' : ' + str(missing))
-    
-    """
-    for name, inval_rapp in invalid_rapp.itimes():
-        r, missing_attribute = invalid_rapp
-        parent = r.get_parent()
+        # the root parent must be in the valid rapp_index
 
-        if not parent: 
-            console.warning('[' + name + '] misses required attribute ' + str(missing_attribute) + ' and does not have parent specification')
-        else:
-            root_parent = _search_root_parent(parent)
+
+
+
+
     pass
-    """
-
 
 
 def validate_cache():
@@ -88,6 +73,7 @@ def validate_cache():
 #################################################################################
 # local methods 
 #################################################################################
+
 
 def _load_specs_from_file(rapp_path, RappObject):
     '''
@@ -104,6 +90,51 @@ def _load_specs_from_file(rapp_path, RappObject):
         if not missing_required_attributes:
             rapp[name] = r
         else:
-            invalid_rapp[name] = (r, missing_required_attributes)
+            invalid_rapp[name] = r 
 
     return rapp, invalid_rapp
+
+def _create_parent_index(rapp, meta_rapp, invalid_rapp):
+    # TODO: We might want to create rapp parent tree to optimize rapp resolution
+
+    parent_index = {}
+    # Put all of them into one dictionary with its parent name. If parent is None, it is the root
+    _add_parent(parent_index, rapp)
+    _add_parent(parent_index, meta_rapp)
+    _add_parent(parent_index, invalid_rapp)
+
+    # for each rapp search for the root parent
+    for name in parent_index:
+        parent_index[name] = _search_root_parent(name, parent_index)
+
+    return parent_index
+
+def _search_root_parent(name, parent_index):
+    '''
+        Traverse parent index dictionary to get root parent of rapp
+
+        @param rapp name
+        @type str 
+        @param parent name indexed dictionary 
+        @type dict
+
+        @return root parent rapp name. returns None if it is root
+        @rtype str
+    '''
+    current_name = name
+    prev_name = current_name
+    while current_name in parent_index:
+        prev_name = current_name
+        current_name = parent_index[current_name]
+
+    if prev_name == name:
+        return None
+    else:
+        return prev_name 
+
+
+def _add_parent(parent_index, rapp):
+    for name, r in rapp.items():
+        if name in parent_index:
+            console.warning('[' + name + '] exist already in parent index!')
+        parent_index[name] = r.get_parent()

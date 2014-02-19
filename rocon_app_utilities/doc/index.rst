@@ -11,6 +11,8 @@ Contents:
    :maxdepth: 2
 
    README
+   rapp
+   test_set
    CHAGELOG
 
 

@@ -9,12 +9,15 @@ from __future__ import division, print_function
 
 import yaml
 
-class Rapp(object):
+class MetaRapp(object):
+    '''
+        Class to handle Meta rapp
+    '''
     # TODO Add public_paremters and rename interface to public_interface
-    _required_attribute = ['display', 'description', 'compatibility', 'interface', 'launch']
-
-    _optional_attribute = ['icon', 'paired_clients', 'required_capability']
-    _parent_attribute = 'parent_specification'
+    _required_attribute = ['display', 'description', 'interface']
+    _optional_attribute = ['icon', 'paired_clients']
+    _inheritable_attribute = ['display', 'description', 'interface', 'icon', 'paired_clients']
+    # _parent_attribute : Meta Rapp does not have parent_specification
 
     def __init__(self, filename=None):
         self.data = {}
@@ -38,16 +41,23 @@ class Rapp(object):
             for oa in self._optional_attribute:
                 if oa in app_data:
                     data[oa] = app_data[oa]
-            if self._parent_attribute in app_data:
-                data[self._parent_attribute] = app_data[self._parent_attribute]
+
+            self.load_inherits(data, app_data)
+
+
 
             self.data = data
 
         return self.validate()
 
-    def get_parent(self):
-        return self.data[self._parent_attribute]
 
+    def load_inherits(self, data, app_data):
+        '''
+            Hook to parse extra information in file. It is called in load_from_file
+        '''
+        return None
+
+    
     def validate(self):
         '''
             Validate whether the rapp has all required attributes.
@@ -56,11 +66,45 @@ class Rapp(object):
             @return missing required_attributes
             @rtype []
         '''
-        missing_required_attributes = set(self._required_attribute).difference(set(self.data.keys()))
-
+        missing_required_attributes = list(set(self._required_attribute).difference(set(self.data.keys())))
         return missing_required_attributes
 
-class MetaRapp(Rapp):
+    def get_parent(self):
+        '''
+            Meta rapp does not have parent. This function is to override Rapp class
+        '''
+        return None
+
+    def get_inheritable_attributes(self):
+        return {}
+
+
+
+
+
+class Rapp(MetaRapp):
     # TODO Add public_paremters and rename interface to public_interface
-    _required_attribute = ['display', 'description', 'compatibility', 'interface']
-    _optional_attribute = ['icon', 'paired_clients']
+    _required_attribute = ['display', 'description', 'compatibility', 'interface', 'launch']
+    _optional_attribute = ['icon', 'paired_clients', 'required_capability']
+    _parent_attribute = 'parent_specification'
+    # _inheritable_attribute : inherited from MetaRapp
+
+    def get_parent(self):
+        '''
+            @return the parent rapp name
+            @rtype str
+        '''
+        if self._parent_attribute in self.data:
+            return self.data[self._parent_attribute]
+        else:
+            return None
+
+    def load_inherits(self, data, app_data):
+        '''
+            Hook to parse extra information in file. It is called in load_from_file
+        '''
+        if self._parent_attribute in app_data:
+            data[self._parent_attribute] = app_data[self._parent_attribute].strip()
+
+    def inherits(self):
+        pass
