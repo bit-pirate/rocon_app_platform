@@ -42,7 +42,7 @@ class MetaRapp(object):
                 if oa in app_data:
                     data[oa] = app_data[oa]
 
-            self.load_inherits(data, app_data)
+            self._load_more(data, app_data)
 
 
 
@@ -51,7 +51,7 @@ class MetaRapp(object):
         return self.validate()
 
 
-    def load_inherits(self, data, app_data):
+    def _load_more(self, data, app_data):
         '''
             Hook to parse extra information in file. It is called in load_from_file
         '''
@@ -99,7 +99,7 @@ class Rapp(MetaRapp):
         else:
             return None
 
-    def load_inherits(self, data, app_data):
+    def _load_more(self, data, app_data):
         '''
             Hook to parse extra information in file. It is called in load_from_file
         '''
