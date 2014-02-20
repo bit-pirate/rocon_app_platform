@@ -14,7 +14,7 @@ Contents:
    rapp
    indexer
    test_cases
-   CHAGELOG
+   CHANGELOG
 
 
 
