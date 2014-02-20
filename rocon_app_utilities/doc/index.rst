@@ -12,6 +12,7 @@ Contents:
 
    README
    rapp
+   indexer
    test_cases
    CHAGELOG
 

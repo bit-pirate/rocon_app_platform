@@ -51,11 +51,12 @@ def load_rapp_path_dict():
     '''
       Retrieves rapps found in the package path. 
 
-      @return rapp dictionary, meta rapp dictionary 
+      @return rapp dictionary
       @rtype {'rapp_uniquename':'its absolute path'}
     '''
+
+    #  TODO : Check if we can use rospack python api to get exports from package.xml
     rapp = {}
-    meta_rapp = {}
     package_index = get_package_index()
     for package in package_index.values():
         for export in package.exports:
@@ -64,13 +65,8 @@ def load_rapp_path_dict():
                 if rapp_name in rapp:
                     console.warning('Warning! Rapp [' + rapp_name + '] already exist. overwriting the existing one..')
                 rapp[rapp_name] = rapp_path
-            elif export.tagname == 'rocon_metaapp':
-                rapp_name, rapp_path = _get_rapp_path(package, export.content)
-                if rapp_name in meta_rapp:
-                    console.warning('Warning! Rapp [' + rapp_name + '] already exist. overwriting the existing one..')
-                meta_rapp[rapp_name] = rapp_path
 
-    return rapp, meta_rapp
+    return rapp
 
 
 def _get_rapp_path(package, package_relative_rapp_filename): 

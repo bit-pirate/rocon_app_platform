@@ -22,20 +22,20 @@ class RappIndexer(object):
 
     def get_parent(self, rapp_name):
         '''
-          returns given rapps one level above parent
+          returns the nearest parent instance of the given rapp
         '''
         # TODO : 
         pass
 
     def get_root_parent(self, rapp_name):
         '''
-          returns the root parent Rapp Instance of given name
+          returns the root parent rapp instance of given name
         '''
         pass
 
     def get_rapp(self, rapp_name):
         '''
-          returns Rapp Instance of given name
+          returns rapp instance of given name
         '''
         pass
 

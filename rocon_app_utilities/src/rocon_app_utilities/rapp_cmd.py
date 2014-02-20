@@ -102,7 +102,7 @@ def main():
     try:
         command = argv[1]
         if command == 'list':
-            _rapp_cmd_list(argv) 
+            _rapp_cmd_list(argv)
         elif command == 'info':
             _rapp_cmd_info(argv)
         elif command == 'depends':

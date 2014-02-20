@@ -3,5 +3,5 @@ Rapp Indexer
 
 Rapp Indexer provides follwing APIs
 
-.. automodule:: rocon_app_utilities.indexer
-   :members:
+.. autoclass:: rocon_app_utilities.indexer.RappIndexer
+  :members:
