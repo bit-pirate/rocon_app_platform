@@ -12,7 +12,7 @@ Contents:
 
    README
    rapp
-   test_set
+   test_cases
    CHAGELOG
 
 
