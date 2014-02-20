@@ -27,7 +27,7 @@ class RappIndexer(object):
     def update_index(self):
         self.raw_data_path = load_rapp_path_dict()
 
-        for name, path in self.raw_data_path.items()
+        for name, path in self.raw_data_path.items():
             r = Rapp(name)
             r.load_from_file(path)
 
