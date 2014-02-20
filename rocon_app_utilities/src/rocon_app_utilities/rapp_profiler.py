@@ -27,7 +27,11 @@ def update_cache():
         and update the cache
     '''
     cache_path = get_cache_path()
-    rapp_path, metarapp_path = load_rapp_path_dict()
+    rapp_path = load_rapp_path_dict()
+
+    for name, path in rapp_path.items():
+        print(name + " : " + path)
+
 
     # TODO
     # for each rapp
@@ -38,6 +42,7 @@ def update_cache():
 
     # Load rapp from file. After this rapp dictionary should contain only valid rapps 
     # invalid_rapps will be resolved with parent specification
+    """
     rapp, invalid_rapp = _load_specs_from_file(rapp_path, Rapp)
     meta_rapp, invalid_meta_rapp = _load_specs_from_file(metarapp_path, MetaRapp)
 
@@ -53,6 +58,7 @@ def update_cache():
         parent = rapp_index[parent_name]
 
         # the root parent must be in the valid rapp_index
+    """
 
 
 

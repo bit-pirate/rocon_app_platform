@@ -8,17 +8,29 @@
 from __future__ import division, print_function 
 
 from .rapp import Rapp, MetaRapp
-
+from .utils import load_rapp_path_dict
 from .params import DEFAULT_ROCON_URI
 
 class RappIndexer(object):
 
     def __init__(self):
+        self.raw_data_path = {}
         self.raw_data = {}
 
         # TODO : We might want to manipulate raw_data to have better format in the future. e.g) cache creation
         # self.data = {} 
+
+        update_index()
+
         pass
+
+    def update_index(self):
+        self.raw_data_path = load_rapp_path_dict()
+
+        for name, path in self.raw_data_path.items()
+            r = Rapp(name)
+            r.load_from_file(path)
+
 
     def get_parent(self, rapp_name):
         '''
