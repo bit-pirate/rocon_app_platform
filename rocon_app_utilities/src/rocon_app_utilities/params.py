@@ -12,3 +12,5 @@
 DOTROS_NAME = '.ros'
 RAPP_PATH = 'rocon/rapp'
 MAX_CACHE_AGE = 1000
+
+DEFAULT_ROCON_URI = 'rocon://'
