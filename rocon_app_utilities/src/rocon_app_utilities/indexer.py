@@ -12,6 +12,7 @@ from .utils import load_rapp_path_dict
 from .params import DEFAULT_ROCON_URI
 from .exceptions import InvalidRappException
 from .rapp import Rapp
+from rocon_console import console
 
 class RappIndexer(object):
 
@@ -29,14 +30,19 @@ class RappIndexer(object):
     def update_index(self):
         self.raw_data_path = load_rapp_path_dict()
 
+        raw_data = {}
         for name, path in self.raw_data_path.items():
             try:
                 r = Rapp(name)
                 r.load_from_file(path)
+                raw_data[name] = r
             except InvalidRappException as ire:
-                print('Error in [' + name + '] : ' + str(ire))
+                console.warning('Error in [' + name + '] : ' + str(ire))
             except Exception as e:
-                print('Error in [' + name + '] : ' + str(e))
+                console.warning('Error in [' + name + '] : ' + str(e))
+
+        for name in raw_data:
+            print(str(name))
 
 
     def get_parent(self, rapp_name):

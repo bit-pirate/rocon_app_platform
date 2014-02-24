@@ -6,6 +6,7 @@
 #################################################################################
 
 from __future__ import division, print_function 
+import yaml
 
 from .exceptions import InvalidRappException
 
@@ -54,7 +55,8 @@ class Rapp(object):
 
     _attributes = ['display', 'description', 'icon', 'public_interface', 'public_parameters', 'compatibility', 'launch', 'parent_specification', 'paired_clients', 'required_capability']
 
-    def __init__(self, filename=None):
+    def __init__(self, name, filename=None):
+        self.name = name
         self.data = {}
         self.type = None
 

@@ -15,7 +15,6 @@ import argparse
 
 import rocon_utilities
 from .indexer import RappIndexer
-from .rapp import Rapp
 
 #################################################################################
 # Global variables
