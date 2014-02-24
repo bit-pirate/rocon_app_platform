@@ -7,9 +7,11 @@
 
 from __future__ import division, print_function 
 
-from .rapp import Rapp, MetaRapp
+#from .rapp import Rapp, MetaRapp
 from .utils import load_rapp_path_dict
 from .params import DEFAULT_ROCON_URI
+from .exceptions import InvalidRappException
+from .rapp import Rapp
 
 class RappIndexer(object):
 
@@ -20,7 +22,7 @@ class RappIndexer(object):
         # TODO : We might want to manipulate raw_data to have better format in the future. e.g) cache creation
         # self.data = {} 
 
-        update_index()
+        self.update_index()
 
         pass
 
@@ -28,8 +30,13 @@ class RappIndexer(object):
         self.raw_data_path = load_rapp_path_dict()
 
         for name, path in self.raw_data_path.items():
-            r = Rapp(name)
-            r.load_from_file(path)
+            try:
+                r = Rapp(name)
+                r.load_from_file(path)
+            except InvalidRappException as ire:
+                print('Error in [' + name + '] : ' + str(ire))
+            except Exception as e:
+                print('Error in [' + name + '] : ' + str(e))
 
 
     def get_parent(self, rapp_name):

@@ -14,7 +14,8 @@ import argparse
 
 
 import rocon_utilities
-import rapp_profiler 
+from .indexer import RappIndexer
+from .rapp import Rapp
 
 #################################################################################
 # Global variables
@@ -65,7 +66,7 @@ def _rapp_cmd_depends_on(argv):
     pass
 
 def _rapp_cmd_profile(argv):
-    rapp_profiler.update_cache()
+    indexer = RappIndexer()
     pass
 
 def _rapp_cmd_compat(argv):

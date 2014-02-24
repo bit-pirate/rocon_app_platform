@@ -17,3 +17,9 @@ class ParentNotFoundException(RappException):
     """
     pass
 
+
+class InvalidRappException(RappException):
+    '''
+        Invalid format of rapp
+    '''
+    pass
