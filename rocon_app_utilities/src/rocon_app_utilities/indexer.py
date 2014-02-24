@@ -36,6 +36,7 @@ class RappIndexer(object):
                 r = Rapp(name)
                 r.load_from_file(path)
                 raw_data[name] = r
+                console.pretty_println('[' + name + '] : ' + str(r.type))
             except InvalidRappException as ire:
                 console.warning('Error in [' + name + '] : ' + str(ire))
             except Exception as e:
