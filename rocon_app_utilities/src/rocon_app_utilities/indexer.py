@@ -17,16 +17,18 @@ from rocon_console import console
 
 class RappIndexer(object):
 
-    def __init__(self):
+    def __init__(self, raw_data=None):
         self.raw_data_path = {}
         self.raw_data = {}
 
         # TODO : We might want to manipulate raw_data to have better format in the future. e.g) cache creation
         # self.data = {} 
 
-        self.update_index()
+        if raw_data:
+            self.raw_data = raw_data
+        else:
+            self.update_index()
 
-        pass
 
     def update_index(self):
         '''

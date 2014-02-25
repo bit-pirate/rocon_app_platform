@@ -74,3 +74,15 @@ def test_rapp_classification():
 def test_rapp_field_validation():
     # TODO
     pass
+
+def test_rapp_inheritance():
+
+    # full inheritance
+
+    # icon and publics
+
+    # publics
+
+    # from meta
+
+    # from another child
