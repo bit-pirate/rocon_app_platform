@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+#
+# License: BSD
+#   https://raw.github.com/robotics-in-concert/rocon_app_platform/license/LICENSE
+#
+
+##############################################################################
+# Imports
+##############################################################################
+
+# enable some python3 compatibility options:
+# (unicode_literals not compatible with python2 uuid module)
+from __future__ import absolute_import, print_function
+
+from nose.tools import assert_raises
+import os
+import rocon_console.console as console
+
+from rocon_app_utilities.rapp import *
+from rocon_app_utilities.exceptions import *
+
+##############################################################################
+# Tests
+##############################################################################
+
+pwd = os.getcwd() 
+
+def test_rapp_loading(): 
+    '''
+        Rapp Loading from file Test
+    '''
+    print(console.bold + "\n****************************************************************************************" + console.reset)
+    print(console.bold + "* Raising on Invalid Rapp Loading" + console.reset)
+    print(console.bold + "****************************************************************************************" + console.reset)
+
+    console.pretty_println('Extra Field', console.bold)
+    filename = pwd + '/test_rapps/invalid_loading/invalid_attribute.rapp'
+    console.pretty_println(' - %s'% filename)
+    assert_raises(InvalidRappException, load_rapp_from_file, filename)
+
+    # console.pretty_println('Duplicated Field',console.bold)
+    # TODO
+
+def test_rapp_classification():
+    '''
+        Invalid Rapp Classification Test
+    '''
+
+    def test_one(Except, func, filename):
+        f = pwd + filename
+        data = load_rapp_from_file(f)
+        console.pretty_println(' - %s'%f)
+        assert_raises(Except, classify_rapp_type, data)
+
+    print(console.bold + "\n****************************************************************************************" + console.reset)
+    print(console.bold + "* Raising on Invalid Rapp Classification" + console.reset)
+    print(console.bold + "****************************************************************************************" + console.reset)
+
+    console.pretty_println('Virtual Child', console.bold)
+    test_one(InvalidRappException,      classify_rapp_type, '/test_rapps/invalid_classification/virtual_child1.rapp')
+    test_one(InvalidRappException,      classify_rapp_type, '/test_rapps/invalid_classification/virtual_child2.rapp')
+
+    console.pretty_println('Invalid Virtual Ancestor', console.bold)
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/invalid_virtual_ancestor1.rapp')
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/invalid_virtual_ancestor2.rapp')
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/invalid_virtual_ancestor3.rapp')
+
+    console.pretty_println('Invalid Implementation Ancestor', console.bold)
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/invalid_implementation_ancestor1.rapp')
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/invalid_implementation_ancestor2.rapp')
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/invalid_implementation_ancestor3.rapp')
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/invalid_implementation_ancestor4.rapp')
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/invalid_implementation_ancestor5.rapp')
+
+    console.pretty_println('Invalid Implementation Child', console.bold)
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/invalid_implementation_child1.rapp')
+
+    console.pretty_println('Field Confilct Rapp', console.bold)
+    test_one(InvalidRappFieldException, classify_rapp_type, '/test_rapps/invalid_classification/conflict.rapp')
+
+def test_rapp_field_validation():
+    # TODO
+    pass
