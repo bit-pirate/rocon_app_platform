@@ -147,7 +147,6 @@ class RappIndexer(object):
 
         return self._resolve_recursive(rapp, parent.get_parent())
 
-
     def to_dot(self):
         '''
             returns the dot graph format
