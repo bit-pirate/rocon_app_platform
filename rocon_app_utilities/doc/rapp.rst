@@ -71,8 +71,10 @@ If the following is present, it is a child rapp. Otherwise it is an ancestor rap
 
 * parent_specification : <package_name>/<.rapp>
 
+
 Note:
 
+* parent_specification and public_interface are mutually exclusive. 
 * Child rapps must be rapp implementations
 * Ancestor rapps can be either virtual or implementation rapps
 
