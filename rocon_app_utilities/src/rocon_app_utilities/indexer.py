@@ -38,9 +38,9 @@ class RappIndexer(object):
                 raw_data[name] = r
                 console.pretty_println('[' + name + '] : ' + str(r.type) + ' has been added')
             except InvalidRappException as ire:
-                console.warning('Error in [' + name + '] : ' + str(ire))
+                console.warning('[' + name + '] has not been added : ' + str(ire))
             except Exception as e:
-                console.warning('Error in [' + name + '] : ' + str(e))
+                console.warning('[' + name + '] has not been added :' + str(e))
 
         for name in raw_data:
             print(str(name))

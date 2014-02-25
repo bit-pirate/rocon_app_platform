@@ -40,7 +40,7 @@ The following table describes the characteristics of each rapp types and require
   +-----------------------+-------------------------+-------------------------+-------------------------+
   | parent_specification  |     N                   | N                       | R                       |
   +-----------------------+-------------------------+-------------------------+-------------------------+
-  | paired_clients        |     N                   | O                       | O                       |
+  | pairing_clients        |     N                   | O                       | O                       |
   +-----------------------+-------------------------+-------------------------+-------------------------+
   | required_capability   |     N                   | O                       | O                       |
   +-----------------------+-------------------------+-------------------------+-------------------------+
@@ -60,7 +60,7 @@ If it is a rapp impementation, the following three parameters are optional
 
 * icon 
 * capabilities
-* paired_clients : paired application with this rapp. e.g) `talker.rapp`_
+* pairing_clients : pairing application with this rapp. e.g) `talker.rapp`_
 
 Note: Rapp implementations may be rapps at the top of a rapp chain.
 

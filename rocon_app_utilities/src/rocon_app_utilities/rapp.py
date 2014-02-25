@@ -15,7 +15,7 @@ CHILD_VALIDATION_LIST = ['parent_specification']
 
 class Rapp(object):
 
-    _attributes = ['display', 'description', 'icon', 'public_interface', 'public_parameters', 'compatibility', 'launch', 'parent_specification', 'paired_clients', 'required_capability']
+    _attributes = ['display', 'description', 'icon', 'public_interface', 'public_parameters', 'compatibility', 'launch', 'parent_specification', 'pairing_clients', 'required_capability']
 
     def __init__(self, name, filename=None):
         self.name = name
@@ -122,19 +122,19 @@ class RappValidation(Rapp):
 class VirtualAncestorRapp(RappValidation):
     _required = ['display', 'description', 'public_interface', 'public_parameters']
     _optional = ['icon']
-    _not_allowed = ['compatibility', 'launch', 'parent_specification', 'paired_clients', 'required_capability']
+    _not_allowed = ['compatibility', 'launch', 'parent_specification', 'pairing_clients', 'required_capability']
     _inherit = []
 
 
 class ImplementationAncestorRapp(RappValidation):
     _required = ['display', 'description', 'public_interface', 'public_parameters', 'compatibility', 'launch']
-    _optional = ['icon', 'paired_clients', 'required_capability']
+    _optional = ['icon', 'pairing_clients', 'required_capability']
     _not_allowed = ['parent_specification']
     _inherit = []
 
 
 class ImplementationChildRapp(RappValidation):
     _required = ['compatibility', 'launch', 'parent_specification']
-    _optional = ['icon', 'paired_clients', 'required_capability']
+    _optional = ['icon', 'pairing_clients', 'required_capability']
     _not_allowed = ['public_interface', 'public_parameters']
     _inherit = ['display', 'description', 'icon', 'public_interface', 'public_parameters']
