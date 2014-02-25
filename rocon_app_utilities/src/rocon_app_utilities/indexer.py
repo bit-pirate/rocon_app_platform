@@ -57,7 +57,7 @@ class RappIndexer(object):
             print('  ' + str(name) + ' : ' + str(rapp.type))
 
 
-    def get_parent(self, rapp_name):
+    def get_nearest_parent(self, rapp_name):
         '''
           returns the nearest parent instance of the given rapp
 
@@ -123,7 +123,6 @@ class RappIndexer(object):
         '''
             resolve the rapp instance with its parent specification and return a runnable rapp
         '''
-
         rapp = copy.deepcopy(self.raw_data[rapp_name]) # Not to currupt original data
         parent = rapp.get_parent()
         

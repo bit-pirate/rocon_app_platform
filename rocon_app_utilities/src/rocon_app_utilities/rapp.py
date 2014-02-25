@@ -107,6 +107,7 @@ class Rapp(object):
 
     def load_from_file(self, filename):
         self.data = load_rapp_from_file(filename)
+        self.classify()
 
 
     def get_parent(self):
@@ -124,7 +125,7 @@ class Rapp(object):
         for attribute in self._inheritable_attributes:
             if not attribute in self.data and attribute in rapp.data: 
                 self.data[attribute] = rapp.data[attribute]
-        self.is_impl, self.is_ance, self.type = classify_rapp_type(self.data)
+        self.classify()
 
 
     def is_implementation(self):
