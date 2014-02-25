@@ -10,6 +10,8 @@ import yaml
 
 from .exceptions import InvalidRappException, InvalidFieldException
 
+IMPLEMETATION_VALIDATION_LIST = ['launch', 'compatibility']
+CHILD_VALIDATION_LIST = ['parent_specification']
 
 class Rapp(object):
 
@@ -36,7 +38,15 @@ class Rapp(object):
                     raise InvalidRappException('Invalid Field : ' + str(d))
 
             self.data = app_data
+            self.field_validation()
             self.classify()
+
+    def field_validation(self):
+        '''
+            Validate each field. E.g) check rocon uri. Check the linked file exist 
+        '''
+        #  TODO
+        pass
 
     def classify(self):
         '''
@@ -62,12 +72,11 @@ class Rapp(object):
         self.type = impl + ' ' + ance
 
             
-
     def is_implementation(self):
         '''
             It is implementation if it contains compatibility and launch attributes
         '''
-        r = set(['compatibility', 'launch'])
+        r = set(IMPLEMETATION_VALIDATION_LIST)
         m = set(self.data.keys())
 
         return r.issubset(m)
@@ -76,7 +85,9 @@ class Rapp(object):
         '''
             It is ancestor rapp if it does not have parent_specification attribute
         '''
-        return False if 'parent_specification' in self.data else True
+        r = set(CHILD_VALIDATION_LIST)
+        m = set(self.data.keys())
+        return (not r.issubset(m))
 
 
 class RappValidation(Rapp):
