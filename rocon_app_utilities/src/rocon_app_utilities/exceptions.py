@@ -18,6 +18,18 @@ class InvalidRappException(RappException):
     '''
     pass
 
+class ParentRappNotFoundException(RappException):
+    '''
+        Parent Not Found Exception
+    '''
+    pass
+
+class RappInvalidChainException(RappException):
+    '''
+        If the rapp chain is invalid.
+    '''
+    pass
+
 
 class RappNotExistException(RappException):
     '''

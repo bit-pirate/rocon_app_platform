@@ -6,6 +6,7 @@
 #################################################################################
 
 from __future__ import division, print_function 
+import copy
 
 #from .rapp import Rapp, MetaRapp
 from .utils import load_rapp_path_dict
@@ -101,10 +102,12 @@ class RappIndexer(object):
           @return rapp instance
           @rtype rocon_app_utilities.rapp.Rapp
         '''
-        rapp = self.resolve(rapp_name)
+        if not rapp_name in self.raw_data:
+            raise RappNotExistException(str(rapp_name) + ' does not exist')
+
+        rapp = self._resolve(rapp_name)
 
         return rapp
-        pass
 
     def get_compatible_rapps(self, rocon_uri=DEFAULT_ROCON_URI): # TODO: add capability check later
         '''
@@ -117,8 +120,31 @@ class RappIndexer(object):
         '''
             resolve the rapp instance with its parent specification and return a runnable rapp
         '''
+
+        rapp = copy.deepcopy(self.raw_data[rapp_name]) # Not to currupt original data
+        parent = rapp.get_parent()
         
-        pass
+        return self._resolve_recursive(rapp, parent)
+
+    def _resolve_recursive(self, rapp, parent_name):
+        '''
+            Internal method of _resolve
+        '''
+
+        if rapp.is_ancestor():
+            return rapp
+
+        if not parent_name:
+            raise RappInvalidChainException('Invalid Rapp Chain from [' + str(rapp)+']')
+
+        if not parent_name in self.raw_data:
+            raise ParentRappNotFoundException(parent_name)
+
+        parent = self.raw_data[parent_name]
+        rapp.inherit(parent)
+
+        return self._resolve_recursive(rapp, parent.get_parent())
+
 
     def to_dot(self):
         '''

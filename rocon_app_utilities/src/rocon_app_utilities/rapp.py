@@ -38,6 +38,7 @@ def _is_ancestor_rapp(data):
 class Rapp(object):
 
     _attributes = ['display', 'description', 'icon', 'public_interface', 'public_parameters', 'compatibility', 'launch', 'parent_specification', 'pairing_clients', 'required_capability']
+    _inheritable_attributes = ['display', 'description', 'icon', 'public_interface', 'public_parameters']
 
     def __init__(self, name, filename=None):
         self.name = name
@@ -46,6 +47,9 @@ class Rapp(object):
 
         if filename: 
             self.load_from_file(filename)
+
+    def __str__(self):
+        return str(self.name)
 
 
     def load_from_file(self, filename):
@@ -102,6 +106,16 @@ class Rapp(object):
         self.is_impl = is_impl
         self.is_ance = is_ance
 
+    def inherit(self, rapp):
+        '''
+            Inherits missing information from the given rapp
+        '''
+        for attribute in self._inheritable_attributes:
+            if not attribute in self.data and attribute in rapp.data: 
+                self.data[attribute] = rapp.data[attribute]
+
+        self.classify()
+
     def is_implementation(self):
         return self.is_impl
 
@@ -113,7 +127,6 @@ class RappValidation(Rapp):
     _required = []
     _optional = []
     _not_allowed = []
-    _inherit = []
 
     @classmethod
     def is_valid(cls, data):
@@ -150,18 +163,15 @@ class VirtualAncestorRapp(RappValidation):
     _required = ['display', 'description', 'public_interface', 'public_parameters']
     _optional = ['icon']
     _not_allowed = ['compatibility', 'launch', 'parent_specification', 'pairing_clients', 'required_capability']
-    _inherit = []
 
 
 class ImplementationAncestorRapp(RappValidation):
     _required = ['display', 'description', 'public_interface', 'public_parameters', 'compatibility', 'launch']
     _optional = ['icon', 'pairing_clients', 'required_capability']
     _not_allowed = ['parent_specification']
-    _inherit = []
 
 
 class ImplementationChildRapp(RappValidation):
     _required = ['compatibility', 'launch', 'parent_specification']
     _optional = ['icon', 'pairing_clients', 'required_capability']
     _not_allowed = ['public_interface', 'public_parameters']
-    _inherit = ['display', 'description', 'icon', 'public_interface', 'public_parameters']
