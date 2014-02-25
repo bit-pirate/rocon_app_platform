@@ -12,7 +12,7 @@ Contents:
 
    README
    rapp
-   rapp_validataion_test
+   rapp_validation_test
    indexer
    test_cases
    CHANGELOG

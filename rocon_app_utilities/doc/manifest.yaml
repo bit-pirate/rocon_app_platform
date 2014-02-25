@@ -2,6 +2,7 @@ authors: Jihoon Lee <jihoonlee.in@gmail.com>
 brief: ''
 bugtracker: https://github.com/robotics-in-concert/rocon_app_platform/issues
 depends:
+- rocon_console
 - rocon_app_manager
 - catkin
 - rocon_utilities

@@ -19,6 +19,7 @@ Implementation Ancestor
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: yaml
+
     display: Talker
     description: 'Talk Talk'
     compatibility: rocon://
@@ -31,6 +32,7 @@ Virtual Ancestor
 ^^^^^^^^^^^^^^^^
 
 .. code-block:: yaml
+
     display: Talker
     description: 'Talk Talk'
     icon: rocon_apps/rocon_bubble.png
@@ -44,6 +46,7 @@ Invalid Rapps
 *Publics(interface and parameters) with Parent Specification*
 
 .. code-block:: yaml
+
     display: Talker
     description: 'Talk Talk'
     icon: rocon_apps/rocon_bubble.png
@@ -55,6 +58,7 @@ Invalid Rapps
 *Publics and compatibility but launch*
 
 .. code-block:: yaml
+
     display: Talker
     description: 'Talk Talk'
     compatibility: rocon://
