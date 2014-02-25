@@ -8,10 +8,11 @@
 from __future__ import division, print_function 
 import yaml
 
-from .exceptions import InvalidRappException, InvalidFieldException
+from .exceptions import *
 
 IMPLEMETATION_VALIDATION_LIST = ['launch', 'compatibility']
 CHILD_VALIDATION_LIST = ['parent_specification']
+RAPP_ATTRIBUTES = ['display', 'description', 'icon', 'public_interface', 'public_parameters', 'compatibility', 'launch', 'parent_specification', 'pairing_clients', 'required_capability']
 
 #################################################################################
 # Local Method
@@ -26,6 +27,7 @@ def _is_implementation_rapp(data):
 
     return r.issubset(m)
 
+
 def _is_ancestor_rapp(data):
     '''
         It is ancestor rapp if it does not have parent_specification attribute
@@ -35,9 +37,55 @@ def _is_ancestor_rapp(data):
     return (not r.issubset(m))
 
 
+def load_rapp_from_file(filename):
+    '''
+        Load rapp specs from the given file
+    '''
+    with open(filename, 'r') as f:
+        app_data = yaml.load(f.read())
+
+        for d in app_data:
+            if d not in RAPP_ATTRIBUTES:
+                raise InvalidRappException('Invalid Field : ' + str(d))
+
+    return app_data
+
+
+def classify_rapp_type(data):
+    '''
+        Classify the current rapp among VirtualAncestor, ImplementationAnacestor, ImplementationChild 
+    '''
+    is_impl = _is_implementation_rapp(data)
+    is_ance = _is_ancestor_rapp(data)
+
+    impl = 'Implementation' if is_impl else 'Virtual'
+    ance = 'Ancestor' if is_ance else 'Child'
+    try:
+        if is_impl and is_ance: # Implementation Ancestor
+            ImplementationAncestorRapp.is_valid(data)
+        elif is_impl and not is_ance: # Implementation Child
+            ImplementationChildRapp.is_valid(data)
+        elif not is_impl and is_ance: # Virtual Ancestor
+            VirtualAncestorRapp.is_valid(data)
+        else:                         # Virtual Child
+            raise InvalidRappException('Virtual Child rapp. Invalid!')
+    except InvalidRappFieldException as ife:
+        raise ife
+        
+    t = str(impl + ' ' + ance)
+    return is_impl, is_ance, t 
+
+
+def validate_rapp_field(data):
+    '''
+        Validate each field. E.g) check rocon uri. Check the linked file exist 
+    '''
+    #  TODO
+    pass
+
+
 class Rapp(object):
 
-    _attributes = ['display', 'description', 'icon', 'public_interface', 'public_parameters', 'compatibility', 'launch', 'parent_specification', 'pairing_clients', 'required_capability']
     _inheritable_attributes = ['display', 'description', 'icon', 'public_interface', 'public_parameters']
 
     def __init__(self, name, filename=None):
@@ -47,25 +95,19 @@ class Rapp(object):
 
         if filename: 
             self.load_from_file(filename)
+            #validate_rapp_field(self.dat)
+            self.classify()
+
 
     def __str__(self):
         return str(self.name)
 
+    def classify(self):
+        self.is_impl, self.is_ance, self.type = classify_rapp_type(self.data)
 
     def load_from_file(self, filename):
-        '''
-            Load rapp specs from the given file
-        '''
-        with open(filename, 'r') as f:
-            app_data = yaml.load(f.read())
+        self.data = load_rapp_from_file(filename)
 
-            for d in app_data:
-                if d not in self._attributes:
-                    raise InvalidRappException('Invalid Field : ' + str(d))
-
-            self.data = app_data
-            self.field_validation()
-            self.classify()
 
     def get_parent(self):
         '''
@@ -74,37 +116,6 @@ class Rapp(object):
         '''
         return self.data['parent_specification'] if 'parent_specification' in  self.data else None
 
-    def field_validation(self):
-        '''
-            Validate each field. E.g) check rocon uri. Check the linked file exist 
-        '''
-        #  TODO
-        pass
-
-    def classify(self):
-        '''
-            Classify the current rapp among VirtualAncestor, ImplementationAnacestor, ImplementationChild 
-        '''
-        is_impl = _is_implementation_rapp(self.data)
-        is_ance = _is_ancestor_rapp(self.data)
-
-        impl = 'Implementation' if is_impl else 'Virtual'
-        ance = 'Ancestor' if is_ance else 'Child'
-        try:
-            if is_impl and is_ance: # Implementation Ancestor
-                ImplementationAncestorRapp.is_valid(self.data)
-            elif is_impl and not is_ance: # Implementation Child
-                ImplementationChildRapp.is_valid(self.data)
-            elif not is_impl and is_ance: # Virtual Ancestor
-                VirtualAncestorRapp.is_valid(self.data)
-            else:                         # Virtual Child
-                raise InvalidRappException('Virtual Child rapp. Invalid!')
-        except InvalidFieldException as ife:
-            raise InvalidRappException('[' + impl + ' ' + ance + '] ' + str(ife))
-
-        self.type = impl + ' ' + ance
-        self.is_impl = is_impl
-        self.is_ance = is_ance
 
     def inherit(self, rapp):
         '''
@@ -113,11 +124,12 @@ class Rapp(object):
         for attribute in self._inheritable_attributes:
             if not attribute in self.data and attribute in rapp.data: 
                 self.data[attribute] = rapp.data[attribute]
+        self.is_impl, self.is_ance, self.type = classify_rapp_type(self.data)
 
-        self.classify()
 
     def is_implementation(self):
         return self.is_impl
+
 
     def is_ancestor(self):
         return self.is_ance

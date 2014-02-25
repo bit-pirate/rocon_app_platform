@@ -11,7 +11,7 @@ import copy
 #from .rapp import Rapp, MetaRapp
 from .utils import load_rapp_path_dict
 from .params import DEFAULT_ROCON_URI
-from .exceptions import InvalidRappException
+from .exceptions import *
 from .rapp import Rapp
 from rocon_console import console
 
@@ -41,8 +41,11 @@ class RappIndexer(object):
             try:
                 r = Rapp(name)
                 r.load_from_file(path)
+                r.classify()
                 raw_data[name] = r
                 console.pretty_println('  [' + name + '] : ' + str(r.type) + ' has been added')
+            except InvalidRappFieldException as irfe:
+                console.warning('  [' + name + '] has not been added : ' + str(irfe))
             except InvalidRappException as ire:
                 console.warning('  [' + name + '] has not been added : ' + str(ire))
             except Exception as e:
@@ -51,7 +54,7 @@ class RappIndexer(object):
 
         console.pretty_println('Available Rapps',console.bold)
         for name, rapp in raw_data.items():
-            print('  ' + str(name) + ' : ' + rapp.type)
+            print('  ' + str(name) + ' : ' + str(rapp.type))
 
 
     def get_parent(self, rapp_name):

@@ -38,7 +38,7 @@ class RappNotExistException(RappException):
     pass
 
 
-class InvalidFieldException(RappException):
+class InvalidRappFieldException(RappException):
     '''
         It does not satisfy required or not allowed field
     '''
