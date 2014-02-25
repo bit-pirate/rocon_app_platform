@@ -155,7 +155,7 @@ class RappValidation(Rapp):
         included_not_allowed = cls._intersection(cls._not_allowed, data.keys())
 
         if len(missing_required) > 0 or len(included_not_allowed) > 0:
-            raise InvalidFieldException(missing_required, included_not_allowed)
+            raise InvalidRappFieldException(missing_required, included_not_allowed)
         
         return True
 
