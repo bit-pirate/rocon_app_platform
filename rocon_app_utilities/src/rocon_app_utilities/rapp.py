@@ -13,6 +13,7 @@ from .exceptions import *
 IMPLEMETATION_VALIDATION_LIST = ['launch', 'compatibility']
 CHILD_VALIDATION_LIST = ['parent_specification']
 RAPP_ATTRIBUTES = ['display', 'description', 'icon', 'public_interface', 'public_parameters', 'compatibility', 'launch', 'parent_specification', 'pairing_clients', 'required_capability']
+INHERITABLE_ATTRIBUTES = ['display', 'description', 'icon', 'public_interface', 'public_parameters', 'parent_specification']
 
 #################################################################################
 # Local Method
@@ -86,7 +87,6 @@ def validate_rapp_field(data):
 
 class Rapp(object):
 
-    _inheritable_attributes = ['display', 'description', 'icon', 'public_interface', 'public_parameters']
 
     def __init__(self, name, filename=None):
         self.name = name
@@ -122,9 +122,14 @@ class Rapp(object):
         '''
             Inherits missing information from the given rapp
         '''
-        for attribute in self._inheritable_attributes:
+
+        # Once it inherits, it removes parent_specification field. If it is inherits from another child, it obtains parent_specification anyway
+        del self.data['parent_specification']
+
+        for attribute in INHERITABLE_ATTRIBUTES:
             if not attribute in self.data and attribute in rapp.data: 
                 self.data[attribute] = rapp.data[attribute]
+
         self.classify()
 
 
@@ -156,7 +161,7 @@ class RappValidation(Rapp):
         included_not_allowed = cls._intersection(cls._not_allowed, data.keys())
 
         if len(missing_required) > 0 or len(included_not_allowed) > 0:
-            raise InvalidRappFieldException(missing_required, included_not_allowed)
+            raise InvalidRappFieldException(cls, missing_required, included_not_allowed)
         
         return True
 

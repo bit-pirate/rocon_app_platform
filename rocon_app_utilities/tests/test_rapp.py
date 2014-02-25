@@ -76,13 +76,45 @@ def test_rapp_field_validation():
     pass
 
 def test_rapp_inheritance():
+    def inherit_pair(path):
+        filename = pwd + path + '/child.rapp'
+        child = Rapp('child',filename) 
+        filename = pwd + path + '/parent.rapp'
+        parent = Rapp('parent',filename) 
+
+        child.inherit(parent)
+        return child
+
+    print(console.bold + "\n****************************************************************************************" + console.reset)
+    print(console.bold + "* Rapp Inheritance" + console.reset)
+    print(console.bold + "****************************************************************************************" + console.reset)
 
     # full inheritance
+    path = '/test_rapps/rapp/inherity/full'
+    console.pretty_println(' - %s'%path) 
+    child = inherit_pair(path)
+    # TODO
 
     # icon and publics
+    path = '/test_rapps/rapp/inherity/icon_and_publics'
+    console.pretty_println(' - %s'%path) 
+    child = inherit_pair(path)
+    # TODO
 
     # publics
+    path = '/test_rapps/rapp/inherity/publics'
+    console.pretty_println(' - %s'%path) 
+    child = inherit_pair(path)
+    # TODO
 
     # from meta
+    path ='/test_rapps/rapp/inherity/from_meta'
+    console.pretty_println(' - %s'%path) 
+    child = inherit_pair(path)
+    # TODO
 
     # from another child
+    path = '/test_rapps/rapp/inherity/from_child'
+    console.pretty_println(' - %s'%path) 
+    child = inherit_pair(path)
+    # TODO

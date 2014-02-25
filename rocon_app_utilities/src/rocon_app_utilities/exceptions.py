@@ -42,9 +42,10 @@ class InvalidRappFieldException(RappException):
     '''
         It does not satisfy required or not allowed field
     '''
-    def __init__(self, invalid_required, invalid_not_allowed):
+    def __init__(self, cls, invalid_required, invalid_not_allowed):
+        self.cls = cls
         self.invalid_required = invalid_required
         self.invalid_not_allowed = invalid_not_allowed
 
     def __str__(self):
-        return str('\n\tMissing Requirements - ' + str(self.invalid_required) + '\n\tInvalid Not Allowed - ' + str(self.invalid_not_allowed))
+        return str('\n\t' + str(self.cls) + '\n\tMissing Requirements - ' + str(self.invalid_required) + '\n\tInvalid Not Allowed - ' + str(self.invalid_not_allowed))
