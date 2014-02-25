@@ -28,47 +28,96 @@ class RappIndexer(object):
         pass
 
     def update_index(self):
+        '''
+            Crawls rocon apps from ROS_PACKAGE_PATH and generates raw_data dictionary
+        '''
         self.raw_data_path = load_rapp_path_dict()
 
         raw_data = {}
+
+        console.pretty_println('Crawling ROS_PACKAGE_PATH...',console.bold)
         for name, path in self.raw_data_path.items():
             try:
                 r = Rapp(name)
                 r.load_from_file(path)
                 raw_data[name] = r
-                console.pretty_println('[' + name + '] : ' + str(r.type) + ' has been added')
+                console.pretty_println('  [' + name + '] : ' + str(r.type) + ' has been added')
             except InvalidRappException as ire:
-                console.warning('[' + name + '] has not been added : ' + str(ire))
+                console.warning('  [' + name + '] has not been added : ' + str(ire))
             except Exception as e:
-                console.warning('[' + name + '] has not been added :' + str(e))
+                console.warning('  [' + name + '] has not been added :' + str(e))
 
-        for name in raw_data:
-            print(str(name))
+
+        console.pretty_println('Available Rapps',console.bold)
+        for name, rapp in raw_data.items():
+            print('  ' + str(name) + ' : ' + rapp.type)
 
 
     def get_parent(self, rapp_name):
         '''
           returns the nearest parent instance of the given rapp
-        '''
-        # TODO : 
-        pass
 
-    def get_root_parent(self, rapp_name):
+          @param rapp_name
+          @type str
+
+          @return parent rapp name if it does not have it return None
+          @rtype str
         '''
-          returns the root parent rapp instance of given name
+        if not rapp_name in self.raw_data:
+            raise RappNotExistException(str(rapp_name) + ' does not exist')
+
+        return self.raw_data[rapp_name].get_parent()
+
+    def get_ancestor(self, rapp_name):
         '''
-        pass
+          @return the acestor rapp name of given rapp
+          @rtype str
+        '''
+        if not rapp_name in self.raw_data:
+            raise RappNotExistException(str(rapp_name) + ' does not exist')
+
+        current_rapp = rapp_name
+        while not self.raw_data[current_rapp].is_ancestor():
+            current_rapp = self.raw_data[current_rapp].get_parent()
+
+        return current_rapp
 
     def get_rapp(self, rapp_name):
         '''
           returns rapp instance of given name
         '''
+        if not rapp_name in self.raw_data:
+            raise RappNotExistException(str(rapp_name) + ' does not exist')
+
+        return self.raw_data[rapp_name]
+
+    def get_complete_rapp(self, rapp_name):
+        '''
+          returns complete rapp instance which includes inherited attributes from its parent
+
+          @param rapp name
+          @type str
+
+          @return rapp instance
+          @rtype rocon_app_utilities.rapp.Rapp
+        '''
+        rapp = self.resolve(rapp_name)
+
+        return rapp
         pass
 
     def get_compatible_rapps(self, rocon_uri=DEFAULT_ROCON_URI): # TODO: add capability check later
         '''
           returns all rapps which are compatible with given URI 
         '''
+        # TODO
+        pass
+
+    def _resolve(self, rapp_name):
+        '''
+            resolve the rapp instance with its parent specification and return a runnable rapp
+        '''
+        
         pass
 
     def to_dot(self):

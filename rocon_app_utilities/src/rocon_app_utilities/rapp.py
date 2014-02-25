@@ -13,6 +13,28 @@ from .exceptions import InvalidRappException, InvalidFieldException
 IMPLEMETATION_VALIDATION_LIST = ['launch', 'compatibility']
 CHILD_VALIDATION_LIST = ['parent_specification']
 
+#################################################################################
+# Local Method
+#################################################################################
+
+def _is_implementation_rapp(data):
+    '''
+        It is implementation if it contains compatibility and launch attributes
+    '''
+    r = set(IMPLEMETATION_VALIDATION_LIST)
+    m = set(data.keys())
+
+    return r.issubset(m)
+
+def _is_ancestor_rapp(data):
+    '''
+        It is ancestor rapp if it does not have parent_specification attribute
+    '''
+    r = set(CHILD_VALIDATION_LIST)
+    m = set(data.keys())
+    return (not r.issubset(m))
+
+
 class Rapp(object):
 
     _attributes = ['display', 'description', 'icon', 'public_interface', 'public_parameters', 'compatibility', 'launch', 'parent_specification', 'pairing_clients', 'required_capability']
@@ -41,6 +63,13 @@ class Rapp(object):
             self.field_validation()
             self.classify()
 
+    def get_parent(self):
+        '''
+            @return Returns parent rapp name
+            @rtype str 
+        '''
+        return self.data['parent_specification'] if 'parent_specification' in  self.data else None
+
     def field_validation(self):
         '''
             Validate each field. E.g) check rocon uri. Check the linked file exist 
@@ -52,8 +81,8 @@ class Rapp(object):
         '''
             Classify the current rapp among VirtualAncestor, ImplementationAnacestor, ImplementationChild 
         '''
-        is_impl = self.is_implementation()
-        is_ance = self.is_ancestor()
+        is_impl = _is_implementation_rapp(self.data)
+        is_ance = _is_ancestor_rapp(self.data)
 
         impl = 'Implementation' if is_impl else 'Virtual'
         ance = 'Ancestor' if is_ance else 'Child'
@@ -70,24 +99,14 @@ class Rapp(object):
             raise InvalidRappException('[' + impl + ' ' + ance + '] ' + str(ife))
 
         self.type = impl + ' ' + ance
+        self.is_impl = is_impl
+        self.is_ance = is_ance
 
-            
     def is_implementation(self):
-        '''
-            It is implementation if it contains compatibility and launch attributes
-        '''
-        r = set(IMPLEMETATION_VALIDATION_LIST)
-        m = set(self.data.keys())
-
-        return r.issubset(m)
+        return self.is_impl
 
     def is_ancestor(self):
-        '''
-            It is ancestor rapp if it does not have parent_specification attribute
-        '''
-        r = set(CHILD_VALIDATION_LIST)
-        m = set(self.data.keys())
-        return (not r.issubset(m))
+        return self.is_ance
 
 
 class RappValidation(Rapp):
@@ -98,14 +117,22 @@ class RappValidation(Rapp):
 
     @classmethod
     def is_valid(cls, data):
+        '''
+            Rapp Validation. If it has all requirements and does not include any not_allowed attributes, it is valid rapp
+            
+            @param rapp specification 
+            @type dict
 
+            @return 
+            
+        '''
         missing_required = cls._difference(cls._required, data.keys()) 
         included_not_allowed = cls._intersection(cls._not_allowed, data.keys())
 
         if len(missing_required) > 0 or len(included_not_allowed) > 0:
             raise InvalidFieldException(missing_required, included_not_allowed)
         
-        return False
+        return True
 
     @classmethod
     def _intersection(cls, attributes, data):

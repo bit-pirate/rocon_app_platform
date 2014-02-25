@@ -11,18 +11,20 @@ class RappException(Exception):
     """
     pass
 
-class ParentNotFoundException(RappException):
-    """
-        Parent Not Found Exception
-    """
-    pass
-
 
 class InvalidRappException(RappException):
     '''
         Invalid format of rapp
     '''
     pass
+
+
+class RappNotExistException(RappException):
+    '''
+        When Rapp does not exist 
+    '''
+    pass
+
 
 class InvalidFieldException(RappException):
     '''
@@ -34,4 +36,3 @@ class InvalidFieldException(RappException):
 
     def __str__(self):
         return str('\n\tMissing Requirements - ' + str(self.invalid_required) + '\n\tInvalid Not Allowed - ' + str(self.invalid_not_allowed))
-        
