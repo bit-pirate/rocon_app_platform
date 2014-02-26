@@ -1,0 +1,5 @@
+display: Parent Talker
+description: Default Talker
+compatibility: rocon:/*
+launch: rocon_apps/talker.launch
+parent_specification: chained/ancestor.rapp

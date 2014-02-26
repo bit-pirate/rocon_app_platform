@@ -37,22 +37,42 @@ class TestRappIndexer():
     def teardown(self):
         del self.data
 
-    def test_inheritance(self): 
-        console.pretty_println('Test Inherance', console.bold)
-
-
     def test_get_ancestor(self):
         console.pretty_println('Test Get Ancestor', console.bold)
+
+        # Cyclic
+
+        # Correct call child -> parent -> ancestor
 
     def test_get_nearest_parent(self):
         console.pretty_println('Test Get Nearest Parent', console.bold)
 
+        # ancestor call get nearest parent
+
+        # parent spec is wrong
+
+        # Correct call
+
     def test_get_rapp(self):
         console.pretty_println('Test Get Rapp', console.bold)
 
+        # call not exist rapp
+
+        # Correct call
+
     def test_get_complete_rapp(self):
         console.pretty_println('Test Get Complete Rapp', console.bold)
-#        inherited_rapp = self.indexer.get_complete_rapp('basic/child')
+
+        # Basic
+        inherited_rapp = self.indexer.get_complete_rapp('basic/child')
+
+        # Chained Child -> Parent -> Ancestor
+
+        # Multiple Child
+
+        # Cyclic
+
+        # Malformed Parent Chain with no ancestor
 
 
 def load_data(verbose=False):
@@ -60,8 +80,13 @@ def load_data(verbose=False):
         console.pretty_println('Loading Test Rapps..',console.bold)
     pwd = os.getcwd() 
     data = {}
-    data['basic/child'] = Rapp('basic/child', pwd + '/test_rapps/indexer/basic/child.rapp')
-    data['basic/parent'] = Rapp('basic/parent', pwd + '/test_rapps/indexer/basic/parent.rapp')
+    data['basic/child']   = Rapp('basic/child',   pwd + '/test_rapps/indexer/basic/child.rapp')
+    data['basic/parent']  = Rapp('basic/parent',  pwd + '/test_rapps/indexer/basic/parent.rapp')
+
+    data['chained/child']     = Rapp('basic/child',     pwd + '/test_rapps/indexer/basic/child.rapp')
+    data['chained/parent']    = Rapp('basic/parent',    pwd + '/test_rapps/indexer/basic/parent.rapp')
+    data['chained/ancestor']  = Rapp('basic/ancestor',  pwd + '/test_rapps/indexer/basic/ancestor.rapp')
+
 
     if verbose:
         for n in data:
