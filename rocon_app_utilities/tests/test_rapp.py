@@ -12,7 +12,7 @@
 # (unicode_literals not compatible with python2 uuid module)
 from __future__ import absolute_import, print_function
 
-from nose.tools import assert_raises
+from nose.tools import assert_raises, assert_true
 import os
 import rocon_console.console as console
 
@@ -85,6 +85,15 @@ def test_rapp_inheritance():
         child.inherit(parent)
         return child
 
+    def validate(data, valid_data): 
+        for f, d in valid_data:
+            if not f in data: 
+                return False
+            if not data[f] == d:
+                return False
+
+        return True
+
     print(console.bold + "\n****************************************************************************************" + console.reset)
     print(console.bold + "* Rapp Inheritance" + console.reset)
     print(console.bold + "****************************************************************************************" + console.reset)
@@ -93,28 +102,53 @@ def test_rapp_inheritance():
     path = '/test_rapps/rapp/inherity/full'
     console.pretty_println(' - %s'%path) 
     child = inherit_pair(path)
-    # TODO
+
+    d = [('display',           'Talker'),
+         ('description',       'Default ros style talker tutorial'),
+         ('public_interface',  'rocon_apps/talker.interface'),
+         ('public_parameters', 'rocon_apps/talker.parameters'),
+         ('icon',              'rocon_apps/talker.png')]
+    assert_true(validate(child.data, d))
+    
 
     # icon and publics
     path = '/test_rapps/rapp/inherity/icon_and_publics'
     console.pretty_println(' - %s'%path) 
     child = inherit_pair(path)
-    # TODO
+    d = [('display',           'Child Talker in icon and publics'),
+         ('description',       'Hola Child...........'),
+         ('public_interface',  'rocon_apps/talker.interface'),
+         ('public_parameters', 'rocon_apps/talker.parameters'),
+         ('icon',              'rocon_apps/talker.png')]
+    assert_true(validate(child.data, d))
 
     # publics
     path = '/test_rapps/rapp/inherity/publics'
     console.pretty_println(' - %s'%path) 
     child = inherit_pair(path)
-    # TODO
+    d = [('display',           'Child Talker in publics'),
+         ('description',       'public public child'),
+         ('public_interface',  'rocon_apps/talker.interface'),
+         ('public_parameters', 'rocon_apps/talker.parameters')]
+    assert_true(validate(child.data, d))
 
     # from meta
     path ='/test_rapps/rapp/inherity/from_meta'
     console.pretty_println(' - %s'%path) 
     child = inherit_pair(path)
-    # TODO
+    d = [('display',           'Talker in from meta'),
+         ('description',       'from meta meta meta metaaaaaaaaa'),
+         ('public_interface',  'rocon_apps/talker.interface'),
+         ('public_parameters', 'rocon_apps/talker.parameters'),
+         ('icon',              'rocon_apps/talker.png')]
+    assert_true(validate(child.data, d))
+
 
     # from another child
     path = '/test_rapps/rapp/inherity/from_child'
     console.pretty_println(' - %s'%path) 
     child = inherit_pair(path)
-    # TODO
+    d = [('display',           'Talker'),
+         ('description',       'Default ros style talker tutorial'),
+         ('icon',              'rocon_apps/talker.png')]
+    assert_true(validate(child.data, d))
